@@ -7,8 +7,6 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-import zarr
-
 from configs.baseline import (
     CROP_SIZE_ZYX,
     IMAGE_ARRAY_KEY,
@@ -20,6 +18,7 @@ from configs.baseline import (
 from src.geff import load_gt
 from src.preprocessing import choose_crop_start, crop_zyx, percentile_normalize
 from src.targets import make_heatmap
+from src.zarr_io import open_array
 
 
 class BiohubDetectorDataset(Dataset):
@@ -60,9 +59,7 @@ class BiohubDetectorDataset(Dataset):
         nodes = meta["nodes"]
         frames = meta["frames"]
 
-        image = zarr.open_group(str(self.train_dir / f"{name}.zarr"), mode="r")[
-            IMAGE_ARRAY_KEY
-        ]
+        image = open_array(self.train_dir / f"{name}.zarr", IMAGE_ARRAY_KEY)
 
         t = int(frames[int(rng.integers(0, len(frames)))])
         frame_nodes = nodes[nodes["t"] == t]

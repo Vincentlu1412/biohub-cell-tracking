@@ -8,9 +8,6 @@ from pathlib import Path
 
 import pandas as pd
 from tqdm import tqdm
-import zarr
-
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -20,6 +17,7 @@ from src.data_paths import resolve_data_root  # noqa: E402
 from src.detection import assign_node_ids, detect_centers_heuristic  # noqa: E402
 from src.submission import sample_to_submission_rows, validate_submission, write_submission  # noqa: E402
 from src.tracking import link_detections  # noqa: E402
+from src.zarr_io import open_array  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
@@ -47,7 +45,7 @@ def main() -> None:
         dataset = zarr_path.stem
         print(f"Predicting {dataset}")
 
-        image = zarr.open_group(str(zarr_path), mode="r")[IMAGE_ARRAY_KEY]
+        image = open_array(zarr_path, IMAGE_ARRAY_KEY)
         n_frames = image.shape[0] if args.max_frames is None else min(args.max_frames, image.shape[0])
 
         frame_detections = []
