@@ -17,6 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from configs.baseline import DEFAULT_DATA_ROOT, RANDOM_SEED, VAL_FRACTION  # noqa: E402
+from src.data_paths import resolve_data_root  # noqa: E402
 from src.dataset import BiohubDetectorDataset  # noqa: E402
 from src.losses import HeatmapLoss  # noqa: E402
 from src.model import build_model  # noqa: E402
@@ -36,7 +37,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    train_dir = args.data_root / "train"
+    data_root = resolve_data_root(args.data_root)
+    train_dir = data_root / "train"
     sample_names = sorted(path.stem for path in train_dir.glob("*.geff"))
 
     if not sample_names:
@@ -49,13 +51,13 @@ def main() -> None:
     )
 
     train_dataset = BiohubDetectorDataset(
-        args.data_root,
+        data_root,
         train_names,
         samples_per_epoch=args.samples_per_epoch,
         seed=RANDOM_SEED,
     )
     val_dataset = BiohubDetectorDataset(
-        args.data_root,
+        data_root,
         val_names,
         samples_per_epoch=max(128, args.samples_per_epoch // 8),
         seed=RANDOM_SEED + 100_000,

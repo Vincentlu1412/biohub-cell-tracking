@@ -1,8 +1,9 @@
 """Analyze Biohub GEFF ground-truth graphs.
 
-Example
--------
-python scripts/analyze_gt.py --data-root /kaggle/input/competitions/biohub-cell-tracking-during-development
+Examples
+--------
+python scripts/analyze_gt.py --data-root /kaggle/input
+python scripts/analyze_gt.py --data-root /kaggle/input/biohub-cell-tracking-during-development
 """
 
 from __future__ import annotations
@@ -26,6 +27,7 @@ from configs.baseline import (  # noqa: E402
     TRAIN_DIR_NAME,
     VOXEL_SIZE_ZYX_UM,
 )
+from src.data_paths import resolve_data_root  # noqa: E402
 from src.geff import add_edge_measurements, count_division_parents, load_gt  # noqa: E402
 
 
@@ -47,6 +49,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def find_samples(data_root: Path) -> tuple[list[Path], list[Path], list[Path]]:
+    data_root = resolve_data_root(data_root)
     train_dir = data_root / TRAIN_DIR_NAME
     test_dir = data_root / TEST_DIR_NAME
 

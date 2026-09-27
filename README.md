@@ -23,7 +23,7 @@ The first target is to reproduce the global GT statistics from the Kaggle traini
 
 ```bash
 pip install -r requirements.txt
-python scripts/analyze_gt.py --data-root /kaggle/input/competitions/biohub-cell-tracking-during-development
+python scripts/analyze_gt.py --data-root /kaggle/input
 ```
 
 For local development, replace `--data-root` with the directory containing `train/` and `test/`.
@@ -50,7 +50,7 @@ Start with a short smoke run:
 
 ```bash
 python scripts/train_detector.py \
-    --data-root /kaggle/input/biohub-cell-tracking-during-development \
+    --data-root /kaggle/input \
     --epochs 1 \
     --samples-per-epoch 64 \
     --batch-size 1 \
