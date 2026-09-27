@@ -58,3 +58,15 @@ python scripts/train_detector.py \
 ```
 
 Then increase `--samples-per-epoch` and `--epochs` for a real run.
+
+## Generate Submission
+
+The current submission path uses a CPU-friendly heuristic detector plus
+nearest-neighbor tracking. It is meant to create the first valid submission
+while the learned detector is still being calibrated.
+
+```bash
+python scripts/inference.py \
+    --data-root /kaggle/input \
+    --output /kaggle/working/submission.csv
+```
